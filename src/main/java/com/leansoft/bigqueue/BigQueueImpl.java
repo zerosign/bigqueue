@@ -28,26 +28,26 @@ import com.leansoft.bigqueue.page.MappedPageFactoryImpl;
  */
 public class BigQueueImpl implements IBigQueue {
 
-    final IBigArray innerArray;
+    private final IBigArray innerArray;
 
     // 2 ^ 3 = 8
-    final static int QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS = 3;
+    private final static int QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS = 3;
     // size in bytes of queue front index page
-    final static int QUEUE_FRONT_INDEX_PAGE_SIZE = 1 << QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS;
+    private final static int QUEUE_FRONT_INDEX_PAGE_SIZE = 1 << QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS;
     // only use the first page
-    static final long QUEUE_FRONT_PAGE_INDEX = 0;
+    private static final long QUEUE_FRONT_PAGE_INDEX = 0;
 
     // folder name for queue front index page
-    final static String QUEUE_FRONT_INDEX_PAGE_FOLDER = "front_index";
+    private final static String QUEUE_FRONT_INDEX_PAGE_FOLDER = "front_index";
 
     // front index of the big queue,
-    final AtomicLong queueFrontIndex = new AtomicLong();
+    private final AtomicLong queueFrontIndex = new AtomicLong();
 
     // factory for queue front index page management(acquire, release, cache)
-    IMappedPageFactory queueFrontIndexPageFactory;
+    private IMappedPageFactory queueFrontIndexPageFactory;
 
     // locks for queue front write management
-    final Lock queueFrontWriteLock = new ReentrantLock();
+    private final Lock queueFrontWriteLock = new ReentrantLock();
 
     // lock for dequeueFuture access
     private final Object futureLock = new Object();
@@ -158,8 +158,7 @@ public class BigQueueImpl implements IBigQueue {
         if (this.isEmpty()) {
             return null;
         }
-        byte[] data = this.innerArray.get(this.queueFrontIndex.get());
-        return data;
+        return this.innerArray.get(this.queueFrontIndex.get());
     }
 
     @Override

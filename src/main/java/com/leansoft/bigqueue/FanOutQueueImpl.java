@@ -32,19 +32,19 @@ import com.leansoft.bigqueue.utils.FolderNameValidator;
  */
 public class FanOutQueueImpl implements IFanOutQueue {
 	
-	final BigArrayImpl innerArray;
+	private final BigArrayImpl innerArray;
 	
 	// 2 ^ 3 = 8
-	final static int QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS = 3;
+	private final static int QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS = 3;
 	// size in bytes of queue front index page
-	final static int QUEUE_FRONT_INDEX_PAGE_SIZE = 1 << QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS;
+	private final static int QUEUE_FRONT_INDEX_PAGE_SIZE = 1 << QUEUE_FRONT_INDEX_ITEM_LENGTH_BITS;
 	// only use the first page
-	static final long QUEUE_FRONT_PAGE_INDEX = 0;
+	private static final long QUEUE_FRONT_PAGE_INDEX = 0;
 	
 	// folder name prefix for queue front index page
-	final static String QUEUE_FRONT_INDEX_PAGE_FOLDER_PREFIX = "front_index_";
+	private final static String QUEUE_FRONT_INDEX_PAGE_FOLDER_PREFIX = "front_index_";
 	
-	final ConcurrentMap<String, QueueFront> queueFrontMap = new ConcurrentHashMap<String, QueueFront>();
+	private final ConcurrentMap<String, QueueFront> queueFrontMap = new ConcurrentHashMap<>();
 
 	/**
 	 * A big, fast and persistent queue implementation with fandout support.
@@ -71,7 +71,7 @@ public class FanOutQueueImpl implements IFanOutQueue {
 		this(queueDir, queueName, BigArrayImpl.DEFAULT_DATA_PAGE_SIZE);
 	}
 	
-	QueueFront getQueueFront(String fanoutId) throws IOException {
+	private QueueFront getQueueFront(String fanoutId) throws IOException {
 		QueueFront qf = this.queueFrontMap.get(fanoutId);
 		if (qf == null) { // not in cache, need to create one
 			qf = new QueueFront(fanoutId);

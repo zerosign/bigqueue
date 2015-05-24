@@ -19,53 +19,48 @@ public class BigQueueTutorial {
 
 	@Test
 	public void demo() throws IOException {
-		
-		IBigQueue bigQueue = null;
-		
-		try {
+
+		try (IBigQueue bigQueue = new BigQueueImpl("d:/bigqueue/tutorial", "demo")) {
 			// create a new big queue
-			bigQueue = new BigQueueImpl("d:/bigqueue/tutorial", "demo");
-				
 			// ensure the new big queue is empty
 			assertNotNull(bigQueue);
 			assertTrue(bigQueue.size() == 0);
 			assertTrue(bigQueue.isEmpty());
 			assertNull(bigQueue.dequeue());
 			assertNull(bigQueue.peek());
-			
+
 			// enqueue some items
-			for(int i = 0; i < 10; i++) {
+			for (int i = 0; i < 10; i++) {
 				String item = String.valueOf(i);
 				bigQueue.enqueue(item.getBytes());
 			}
 			// now the big queue is not empty
 			assertTrue(!bigQueue.isEmpty());
 			assertTrue(bigQueue.size() == 10);
-			
+
 			// peek the front of the queue
 			assertEquals(String.valueOf(0), new String(bigQueue.peek()));
-			
-			// dequeue some items 
-			for(int i = 0; i < 5; i++) {
+
+			// dequeue some items
+			for (int i = 0; i < 5; i++) {
 				String item = new String(bigQueue.dequeue());
 				assertEquals(String.valueOf(i), item);
 			}
 			// the big queue is not empty yet
 			assertTrue(!bigQueue.isEmpty());
 			assertTrue(bigQueue.size() == 5);
-			
+
 			// dequeue all remaining items
-			while(true) {
+			while (true) {
 				byte[] data = bigQueue.dequeue();
 				if (data == null) break;
 			}
 			// now the big is empty since all items have been dequeued
 			assertTrue(bigQueue.isEmpty());
-			
-		} finally {
-			// release resources
-			bigQueue.close();
+
 		}
+		// release resources
+
 	}
 
 }

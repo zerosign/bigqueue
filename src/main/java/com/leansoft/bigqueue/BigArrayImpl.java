@@ -36,57 +36,57 @@ import com.leansoft.bigqueue.utils.FileUtil;
 public class BigArrayImpl implements IBigArray {
 	
 	// folder name for index page
-	final static String INDEX_PAGE_FOLDER = "index";
+	private final static String INDEX_PAGE_FOLDER = "index";
 	// folder name for data page
-	final static String DATA_PAGE_FOLDER = "data";
+	private final static String DATA_PAGE_FOLDER = "data";
 	// folder name for meta data page
-	final static String META_DATA_PAGE_FOLDER = "meta_data";
+	private final static String META_DATA_PAGE_FOLDER = "meta_data";
 	
 	// 2 ^ 20 = 1024 * 1024
-	final static int INDEX_ITEMS_PER_PAGE_BITS = 20; // 1024 * 1024
+	private final static int INDEX_ITEMS_PER_PAGE_BITS = 20; // 1024 * 1024
 	// number of items per page
-	final static int INDEX_ITEMS_PER_PAGE = 1 << INDEX_ITEMS_PER_PAGE_BITS;
+	private final static int INDEX_ITEMS_PER_PAGE = 1 << INDEX_ITEMS_PER_PAGE_BITS;
 	// 2 ^ 5 = 32
-	final static int INDEX_ITEM_LENGTH_BITS = 5;
+	private final static int INDEX_ITEM_LENGTH_BITS = 5;
 	// length in bytes of an index item
-	final static int INDEX_ITEM_LENGTH = 1 << INDEX_ITEM_LENGTH_BITS; 
+	private final static int INDEX_ITEM_LENGTH = 1 << INDEX_ITEM_LENGTH_BITS;
 	// size in bytes of an index page
 	final static int INDEX_PAGE_SIZE = INDEX_ITEM_LENGTH * INDEX_ITEMS_PER_PAGE; 
 	
 	// size in bytes of a data page
-	final int DATA_PAGE_SIZE;
+	private final int DATA_PAGE_SIZE;
 	
 	// default size in bytes of a data page
 	public final static int DEFAULT_DATA_PAGE_SIZE = 128 * 1024 * 1024;
 	// minimum size in bytes of a data page
 	public final static int MINIMUM_DATA_PAGE_SIZE = 32 * 1024 * 1024;
 	// seconds, time to live for index page cached in memory
-	final static int INDEX_PAGE_CACHE_TTL = 1000;
+	private final static int INDEX_PAGE_CACHE_TTL = 1000;
 	// seconds, time to live for data page cached in memory
-	final static int DATA_PAGE_CACHE_TTL = 1000;
+	private final static int DATA_PAGE_CACHE_TTL = 1000;
 	// 2 ^ 4 = 16
-	final static int META_DATA_ITEM_LENGTH_BITS = 4;
+	private final static int META_DATA_ITEM_LENGTH_BITS = 4;
 	// size in bytes of a meta data page
-	final static int META_DATA_PAGE_SIZE = 1 << META_DATA_ITEM_LENGTH_BITS;
+	private final static int META_DATA_PAGE_SIZE = 1 << META_DATA_ITEM_LENGTH_BITS;
 	
 //	private final static int INDEX_ITEM_DATA_PAGE_INDEX_OFFSET = 0;
 //	private final static int INDEX_ITEM_DATA_ITEM_OFFSET_OFFSET = 8;
 	private final static int INDEX_ITEM_DATA_ITEM_LENGTH_OFFSET = 12;
 	// timestamp offset of an data item within an index item
-	final static int INDEX_ITEM_DATA_ITEM_TIMESTAMP_OFFSET = 16;
+	private final static int INDEX_ITEM_DATA_ITEM_TIMESTAMP_OFFSET = 16;
 	
 	// directory to persist array data
 	String arrayDirectory;
 	
 	// factory for index page management(acquire, release, cache)
-	IMappedPageFactory indexPageFactory; 
+	private IMappedPageFactory indexPageFactory;
 	// factory for data page management(acquire, release, cache)
-	IMappedPageFactory dataPageFactory;
+	private IMappedPageFactory dataPageFactory;
 	// factory for meta data page management(acquire, release, cache)
-	IMappedPageFactory metaPageFactory;
+	private IMappedPageFactory metaPageFactory;
 	
 	// only use the first page
-	static final long META_DATA_PAGE_INDEX = 0;
+	private static final long META_DATA_PAGE_INDEX = 0;
 	
 	// head index of the big array, this is the read write barrier.
 	// readers can only read items before this index, and writes can write this index or after
@@ -96,15 +96,15 @@ public class BigArrayImpl implements IBigArray {
 	final AtomicLong arrayTailIndex = new AtomicLong();
 	
 	// head index of the data page, this is the to be appended data page index
-	long headDataPageIndex;
+	private long headDataPageIndex;
 	// head offset of the data page, this is the to be appended data offset
-	int headDataItemOffset;
+	private int headDataItemOffset;
 	
 	// lock for appending state management
-	final Lock appendLock = new ReentrantLock();
+	private final Lock appendLock = new ReentrantLock();
 	
 	// global lock for array read and write management
-    final ReadWriteLock arrayReadWritelock = new ReentrantReadWriteLock();
+    private final ReadWriteLock arrayReadWritelock = new ReentrantReadWriteLock();
     final Lock arrayReadLock = arrayReadWritelock.readLock();
     final Lock arrayWriteLock = arrayReadWritelock.writeLock(); 
 	
@@ -156,7 +156,7 @@ public class BigArrayImpl implements IBigArray {
 	}
 	
 	
-	void commonInit() throws IOException {
+	private void commonInit() throws IOException {
 		// initialize page factories
 		this.indexPageFactory = new MappedPageFactoryImpl(INDEX_PAGE_SIZE, 
 				this.arrayDirectory + INDEX_PAGE_FOLDER, 
@@ -242,7 +242,7 @@ public class BigArrayImpl implements IBigArray {
 	}
 	
 	// find out array head/tail from the meta data
-	void initArrayIndex() throws IOException {
+	private void initArrayIndex() throws IOException {
 		IMappedPage metaDataPage = this.metaPageFactory.acquirePage(META_DATA_PAGE_INDEX);
 		ByteBuffer metaBuf = metaDataPage.getLocal(0);
 		long head = metaBuf.getLong();
@@ -253,7 +253,7 @@ public class BigArrayImpl implements IBigArray {
 	}
 	
 	// find out data page head index and offset
-	void initDataPageIndex() throws IOException {
+	private void initDataPageIndex() throws IOException {
 
 		if (this.isEmpty()) {
 			headDataPageIndex = 0L;
@@ -404,8 +404,7 @@ public class BigArrayImpl implements IBigArray {
 				int dataItemOffset = indexItemBuffer.getInt();
 				int dataItemLength = indexItemBuffer.getInt();
 				dataPage = this.dataPageFactory.acquirePage(dataPageIndex);
-				byte[] data = dataPage.getLocal(dataItemOffset, dataItemLength);
-				return data;
+				return dataPage.getLocal(dataItemOffset, dataItemLength);
 			} finally {
 				if (dataPage != null) {
 					this.dataPageFactory.releasePage(dataPageIndex);
@@ -425,14 +424,13 @@ public class BigArrayImpl implements IBigArray {
 			// position to the timestamp
 			int position = indexItemBuffer.position();
 			indexItemBuffer.position(position + INDEX_ITEM_DATA_ITEM_TIMESTAMP_OFFSET);
-			long ts = indexItemBuffer.getLong();
-			return ts;
+			return indexItemBuffer.getLong();
 		} finally {
 			arrayReadLock.unlock();
 		}
 	}
 	
-	ByteBuffer getIndexItemBuffer(long index) throws IOException {
+	private ByteBuffer getIndexItemBuffer(long index) throws IOException {
 		
 		IMappedPage indexPage = null;
 		long indexPageIndex = -1L;
@@ -440,9 +438,8 @@ public class BigArrayImpl implements IBigArray {
 			indexPageIndex = Calculator.div(index, INDEX_ITEMS_PER_PAGE_BITS); // shift optimization
 			indexPage = this.indexPageFactory.acquirePage(indexPageIndex);
 			int indexItemOffset = (int) (Calculator.mul(Calculator.mod(index, INDEX_ITEMS_PER_PAGE_BITS), INDEX_ITEM_LENGTH_BITS));
-			
-			ByteBuffer indexItemBuffer = indexPage.getLocal(indexItemOffset);
-			return indexItemBuffer;
+
+			return indexPage.getLocal(indexItemOffset);
 		} finally {
 			if (indexPage != null) {
 				this.indexPageFactory.releasePage(indexPageIndex);
@@ -681,8 +678,7 @@ public class BigArrayImpl implements IBigArray {
 		// position to the data item length
 		int position = indexItemBuffer.position();
 		indexItemBuffer.position(position + INDEX_ITEM_DATA_ITEM_LENGTH_OFFSET);
-		int length = indexItemBuffer.getInt();
-		return length;
+		return indexItemBuffer.getInt();
 	}
 	
 	// inner getBackFileSize

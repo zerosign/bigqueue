@@ -31,10 +31,7 @@ public class BigArrayPerfTest {
 			fail("fail to init big array");
 		}
 	}
-	
-	// configurable parameters
-	//////////////////////////////////////////////////////////////////
-	private static int loop = 5;
+
 	private static int totalItemCount = 100000;
 	private static int producerNum = 1;
 	private static int consumerNum = 1;
@@ -97,7 +94,7 @@ public class BigArrayPerfTest {
 	private static class RandomConsumer extends Thread {
 		private final CountDownLatch latch;
 		private final Queue<Result> resultQueue;
-		private final List<Long> indexList = new ArrayList<Long>();
+		private final List<Long> indexList = new ArrayList<>();
 		
 		public RandomConsumer(CountDownLatch latch, Queue<Result> resultQueue) {
 			this.latch = latch;
@@ -169,6 +166,7 @@ public class BigArrayPerfTest {
 	@Test
 	public void runTest() throws Exception {
 		System.out.println("Performance test begin ...");
+		int loop = 5;
 		for(int i = 0; i < loop; i++) {
 			System.out.println("[doRunProduceThenConsume] round " + (i + 1) + " of " + loop);
 			this.doRunProduceThenConsume();
@@ -190,12 +188,12 @@ public class BigArrayPerfTest {
 		System.out.println("Performance test finished successfully.");
 	}
 	
-	public void doRunProduceThenConsume() throws Exception {
+	private void doRunProduceThenConsume() throws Exception {
 		//prepare
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatch = new CountDownLatch(consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		long totalProducingTime = 0;
 		long totalConsumingTime = 0;
@@ -277,11 +275,11 @@ public class BigArrayPerfTest {
 	}
 	
 
-	public void doRunMixed() throws Exception {
+	private void doRunMixed() throws Exception {
 		//prepare
 		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		long totalProducingTime = 0;
 		long totalConsumingTime = 0;

@@ -336,12 +336,12 @@ public class FanOutQueueTest {
 		assertEquals(randomString2, new String(foQueue.dequeue("test")));
 		
 		foQueue.limitBackFileSize(oneM * 2 * 32);
-		assertEquals(1 * oneM, foQueue.size("test"));
+		assertEquals(oneM, foQueue.size("test"));
 		assertTrue(2 * 32 * oneM == foQueue.getBackFileSize() );
 		assertEquals(randomString3, new String(foQueue.dequeue("test")));
 		
 		foQueue.limitBackFileSize(oneM * 32); // will be ignore
-		assertEquals(1 * oneM - 1, foQueue.size("test"));
+		assertEquals(oneM - 1, foQueue.size("test"));
 		assertTrue(2 * 32 * oneM == foQueue.getBackFileSize() );
 		assertEquals(randomString3, new String(foQueue.dequeue("test")));		
 	}

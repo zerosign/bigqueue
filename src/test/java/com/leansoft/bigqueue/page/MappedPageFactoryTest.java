@@ -19,7 +19,6 @@ import com.leansoft.bigqueue.TestUtil;
 import com.leansoft.bigqueue.page.IMappedPage;
 import com.leansoft.bigqueue.page.IMappedPageFactory;
 import com.leansoft.bigqueue.page.MappedPageFactoryImpl;
-import com.leansoft.bigqueue.page.MappedPageImpl;
 import com.leansoft.bigqueue.utils.FileUtil;
 
 public class MappedPageFactoryTest {
@@ -236,7 +235,7 @@ public class MappedPageFactoryTest {
 	private Map<Integer, IMappedPage[]> testAndGetSharedMap(IMappedPageFactory pageFactory, int threadNum, int pageNumLimit) {
 		
 		// init shared map
-		Map<Integer, IMappedPage[]> sharedMap = new ConcurrentHashMap<Integer, IMappedPage[]>();
+		Map<Integer, IMappedPage[]> sharedMap = new ConcurrentHashMap<>();
 		for(int i = 0; i < threadNum; i++) {
 			IMappedPage[] pageArray = new IMappedPage[pageNumLimit];
 			sharedMap.put(i, pageArray);
@@ -290,7 +289,7 @@ public class MappedPageFactoryTest {
 		}
 		
 		public void run() {
-			List<Integer> pageNumList = new ArrayList<Integer>();
+			List<Integer> pageNumList = new ArrayList<>();
 			for(int i = 0; i < pageNumLimit; i++) {
 				pageNumList.add(i);
 			}

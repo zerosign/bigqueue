@@ -23,15 +23,11 @@ public class FanOutQueueLoadTest {
 
 	private static String testDir = TestUtil.TEST_BASE_DIR + "fanout_queue/load";
 	private static IFanOutQueue foQueue;
-	
-	// configurable parameters
-	//////////////////////////////////////////////////////////////////
-	private static int loop = 5;
+
 	private static int totalItemCount = 100000;
 	private static int producerNum = 4;
 	private static int consumerGroupANum = 2;
 	private static int consumerGroupBNum = 4;
-	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 
 	private enum Status {
@@ -67,6 +63,7 @@ public class FanOutQueueLoadTest {
 		
 		public void run() {
 			Result result = new Result();
+			int messageLength = 1024;
 			String rndString = TestUtil.randomString(messageLength);
 			try {
 				latch.countDown();
@@ -139,6 +136,7 @@ public class FanOutQueueLoadTest {
 		foQueue = new FanOutQueueImpl(testDir, "load_test_one");
 		
 		System.out.println("Load test begin ...");
+		int loop = 5;
 		for(int i = 0; i < loop; i++) {
 			System.out.println("[doRunProduceThenConsume] round " + (i + 1) + " of " + loop);
 			this.doRunProduceThenConsume();
@@ -161,13 +159,13 @@ public class FanOutQueueLoadTest {
 		System.out.println("Load test finished successfully.");
 	}
 	
-	public void doRunMixed() throws Exception {
+	private void doRunMixed() throws Exception {
 		final AtomicInteger producerItemCount = new AtomicInteger(0);
 		final AtomicInteger consumerGroupAItemCount = new AtomicInteger(0);
 		final AtomicInteger consumerGroupBItemCount = new AtomicInteger(0);
 		
-	    final Set<String> itemSetA = Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
-	    final Set<String> itemSetB = Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
+	    final Set<String> itemSetA = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	    final Set<String> itemSetB = Collections.newSetFromMap(new ConcurrentHashMap<>());
 		
 		String consumerGroupAFanoutId = "groupA";
 		String consumerGroupBFanoutId = "groupB";
@@ -175,9 +173,9 @@ public class FanOutQueueLoadTest {
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatchGroupA = new CountDownLatch(consumerGroupANum);
 		CountDownLatch clatchGroupB = new CountDownLatch(consumerGroupBNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerGroupAResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerGroupBResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerGroupAResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerGroupBResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {
@@ -224,15 +222,15 @@ public class FanOutQueueLoadTest {
 		assertTrue(foQueue.size() == totalItemCount);
 	}
 	
-	public void doRunProduceThenConsume() throws Exception {
+	private void doRunProduceThenConsume() throws Exception {
 		//prepare
 		
 		final AtomicInteger producerItemCount = new AtomicInteger(0);
 		final AtomicInteger consumerGroupAItemCount = new AtomicInteger(0);
 		final AtomicInteger consumerGroupBItemCount = new AtomicInteger(0);
 		
-	    final Set<String> itemSetA = Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
-	    final Set<String> itemSetB = Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
+	    final Set<String> itemSetA = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	    final Set<String> itemSetB = Collections.newSetFromMap(new ConcurrentHashMap<>());
 		
 		String consumerGroupAFanoutId = "groupA";
 		String consumerGroupBFanoutId = "groupB";
@@ -240,9 +238,9 @@ public class FanOutQueueLoadTest {
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatchGroupA = new CountDownLatch(consumerGroupANum);
 		CountDownLatch clatchGroupB = new CountDownLatch(consumerGroupBNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerGroupAResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerGroupBResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerGroupAResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerGroupBResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {

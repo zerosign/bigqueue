@@ -20,7 +20,7 @@ public class BigQueuePerfTest {
 	
 	private static String testDir = TestUtil.TEST_BASE_DIR + "bigqueue/perf";
 	private static IBigQueue bigQueue;
-	private static BlockingQueue<byte[]> memoryQueue = new LinkedBlockingQueue<byte[]>();
+	private static BlockingQueue<byte[]> memoryQueue = new LinkedBlockingQueue<>();
 	
 	static {
 		try {
@@ -29,10 +29,7 @@ public class BigQueuePerfTest {
 			fail("fail to init big queue");
 		}
 	}
-	
-	// configurable parameters
-	//////////////////////////////////////////////////////////////////
-	private static int loop = 5;
+
 	private static int totalItemCount = 100000;
 	private static int producerNum = 2;
 	private static int consumerNum = 2;
@@ -146,7 +143,8 @@ public class BigQueuePerfTest {
 	@Test
 	public void runTest() throws Exception {
 		System.out.println("Performance test begin ...");
-		
+
+		int loop = 5;
 		for(int i = 0; i < loop; i++) {
 			System.out.println("[doRunProduceThenConsume] round " + (i + 1) + " of " + loop);
 			this.doRunProduceThenConsume();
@@ -168,12 +166,12 @@ public class BigQueuePerfTest {
 		System.out.println("Performance test finished successfully.");
 	}
 	
-	public void doRunProduceThenConsume() throws Exception {
+	private void doRunProduceThenConsume() throws Exception {
 		//prepare
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatch = new CountDownLatch(consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		long totalProducingTime = 0;
 		long totalConsumingTime = 0;
@@ -237,11 +235,11 @@ public class BigQueuePerfTest {
 	}
 	
 
-	public void doRunMixed() throws Exception {
+	private void doRunMixed() throws Exception {
 		//prepare
 		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		long totalProducingTime = 0;
 		long totalConsumingTime = 0;

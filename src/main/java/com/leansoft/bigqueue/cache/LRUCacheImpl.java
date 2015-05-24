@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LRUCacheImpl.class);
-    public static final long DEFAULT_TTL = 10 * 1000; // milliseconds
+    private static final long DEFAULT_TTL = 10 * 1000; // milliseconds
 
 	
 	private final Map<K, V> map;

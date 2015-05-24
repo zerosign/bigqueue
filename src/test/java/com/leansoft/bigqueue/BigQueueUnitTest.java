@@ -1,7 +1,6 @@
 package com.leansoft.bigqueue;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -400,18 +399,15 @@ public class BigQueueUnitTest {
         future1.addListener(r, executor);
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < numberOfItems; i++) {
-                    try {
-                        spyBigQueue.enqueue(String.valueOf(i).getBytes());
-                    } catch (Exception e) {
-                        fail("Unexpected exception during enqueue operation");
-                    }
+        new Thread(() -> {
+            for (int i = 0; i < numberOfItems; i++) {
+                try {
+                    spyBigQueue.enqueue(String.valueOf(i).getBytes());
+                } catch (Exception e) {
+                    fail("Unexpected exception during enqueue operation");
                 }
-                testFlowControl.release();
             }
+            testFlowControl.release();
         }).start();
 
         if (testFlowControl.tryAcquire(2, 10, TimeUnit.SECONDS)) {

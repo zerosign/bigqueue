@@ -202,7 +202,7 @@ public class BigArrayUnitTest {
 		System.out.println("Time used to sequentially read " + loop + " items : " + timeInSeconds + " seconds.");
 		
 		begin = System.currentTimeMillis();
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 		for(int i = 0; i < loop; i++) {
 			list.add(i);
 		}
@@ -384,20 +384,17 @@ public class BigArrayUnitTest {
 	}
 
     @Rule
-    public TemporaryFolder tempDir = new TemporaryFolder();
+	private TemporaryFolder tempDir = new TemporaryFolder();
 
     @Test
     public void testRemoveBeforeIndexDataCorruption() throws IOException, InterruptedException {
         bigArray = new BigArrayImpl(tempDir.newFolder().getAbsolutePath(), "data_corruption", BigArrayImpl.DEFAULT_DATA_PAGE_SIZE);
 
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    bigArray.limitBackFileSize(500 * 1024 * 1024);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate((Runnable) () -> {
+            try {
+                bigArray.limitBackFileSize(500 * 1024 * 1024);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }, 100, 100, TimeUnit.MILLISECONDS);
 

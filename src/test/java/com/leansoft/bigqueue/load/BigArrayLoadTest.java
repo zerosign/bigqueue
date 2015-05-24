@@ -25,14 +25,10 @@ public class BigArrayLoadTest {
 	
 	private static String testDir = TestUtil.TEST_BASE_DIR + "bigarray/load";
 	private static IBigArray bigArray;
-	
-	// configurable parameters
-	//////////////////////////////////////////////////////////////////
-	private static int loop = 5;
+
 	private static int totalItemCount = 100000;
 	private static int producerNum = 4;
 	private static int consumerNum = 4;
-	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 
 	private enum Status {
@@ -52,7 +48,7 @@ public class BigArrayLoadTest {
 	}
 	
 	private static final AtomicInteger producingItemCount = new AtomicInteger(0);
-    private static final Map<String, AtomicInteger> itemMap = new ConcurrentHashMap<String,AtomicInteger>();
+    private static final Map<String, AtomicInteger> itemMap = new ConcurrentHashMap<>();
     
 	private static class Producer extends Thread {
 		private final CountDownLatch latch;
@@ -65,6 +61,7 @@ public class BigArrayLoadTest {
 		
 		public void run() {
 			Result result = new Result();
+			int messageLength = 1024;
 			String rndString = TestUtil.randomString(messageLength);
 			try {
 				latch.countDown();
@@ -90,7 +87,7 @@ public class BigArrayLoadTest {
 	private static class RandomConsumer extends Thread {
 		private final CountDownLatch latch;
 		private final Queue<Result> resultQueue;
-		private final List<Long> indexList = new ArrayList<Long>();
+		private final List<Long> indexList = new ArrayList<>();
 		
 		public RandomConsumer(CountDownLatch latch, Queue<Result> resultQueue) {
 			this.latch = latch;
@@ -167,6 +164,7 @@ public class BigArrayLoadTest {
 		bigArray = new BigArrayImpl(testDir, "load_test");
 		
 		System.out.println("Load test begin ...");
+		int loop = 5;
 		for(int i = 0; i < loop; i++) {
 			System.out.println("[doRunProduceThenConsume] round " + (i + 1) + " of " + loop);
 			this.doRunProduceThenConsume();
@@ -193,12 +191,12 @@ public class BigArrayLoadTest {
 		System.out.println("Load test finished successfully.");
 	}
 	
-	public void doRunProduceThenConsume() throws Exception {
+	private void doRunProduceThenConsume() throws Exception {
 		//prepare
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatch = new CountDownLatch(consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {
@@ -233,11 +231,11 @@ public class BigArrayLoadTest {
 	}
 	
 
-	public void doRunMixed() throws Exception {
+	private void doRunMixed() throws Exception {
 		//prepare
 		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {

@@ -17,7 +17,7 @@ public class LRUCacheTest {
 	@Test
 	public void singleThreadTest() {
 		
-		ILRUCache<Integer, TestObject> cache = new LRUCacheImpl<Integer, TestObject>();
+		ILRUCache<Integer, TestObject> cache = new LRUCacheImpl<>();
 		
 		TestObject obj = new TestObject();
 		cache.put(1, obj, 500);
@@ -91,7 +91,7 @@ public class LRUCacheTest {
 	
 	@Test
 	public void multiThreadsTest() {
-		ILRUCache<Integer, TestObject> cache = new LRUCacheImpl<Integer, TestObject>();
+		ILRUCache<Integer, TestObject> cache = new LRUCacheImpl<>();
 		int threadNum = 100;
 		
 		Worker[] workers = new Worker[threadNum];
@@ -117,7 +117,7 @@ public class LRUCacheTest {
 		
 		assertTrue(cache.size() == 0);
 		
-		cache = new LRUCacheImpl<Integer, TestObject>();
+		cache = new LRUCacheImpl<>();
 		threadNum = 100;
 		
 		RandomWorker[] randomWorkers = new RandomWorker[threadNum];

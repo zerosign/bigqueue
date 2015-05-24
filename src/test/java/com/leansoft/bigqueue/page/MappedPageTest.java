@@ -70,8 +70,8 @@ public class MappedPageTest {
 		int threadNum = 100;
 		int pageNumLimit = 50;
 		
-		Set<IMappedPage> pageSet = Collections.newSetFromMap(new ConcurrentHashMap<IMappedPage, Boolean>());
-		List<ByteBuffer> localBufferList = Collections.synchronizedList(new ArrayList<ByteBuffer>());
+		Set<IMappedPage> pageSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
+		List<ByteBuffer> localBufferList = Collections.synchronizedList(new ArrayList<>());
 		
 		Worker[] workers = new Worker[threadNum];
 		for(int i = 0; i < threadNum; i++) {

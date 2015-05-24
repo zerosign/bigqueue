@@ -23,14 +23,10 @@ public class BigQueueLoadTest {
 	
 	private static String testDir = TestUtil.TEST_BASE_DIR + "bigqueue/load";
 	private static IBigQueue bigQueue;
-	
-	// configurable parameters
-	//////////////////////////////////////////////////////////////////
-	private static int loop = 5;
+
 	private static int totalItemCount = 100000;
 	private static int producerNum = 4;
 	private static int consumerNum = 4;
-	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 
 	private enum Status {
@@ -51,7 +47,7 @@ public class BigQueueLoadTest {
 	
 	private static final AtomicInteger producingItemCount = new AtomicInteger(0);
 	private static final AtomicInteger consumingItemCount = new AtomicInteger(0);
-    private static final Set<String> itemSet = Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
+    private static final Set<String> itemSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
     
 	private static class Producer extends Thread {
 		private final CountDownLatch latch;
@@ -64,6 +60,7 @@ public class BigQueueLoadTest {
 		
 		public void run() {
 			Result result = new Result();
+			int messageLength = 1024;
 			String rndString = TestUtil.randomString(messageLength);
 			try {
 				latch.countDown();
@@ -129,6 +126,7 @@ public class BigQueueLoadTest {
 		bigQueue = new BigQueueImpl(testDir, "load_test");
 		
 		System.out.println("Load test begin ...");
+		int loop = 5;
 		for(int i = 0; i < loop; i++) {
 			System.out.println("[doRunProduceThenConsume] round " + (i + 1) + " of " + loop);
 			this.doRunProduceThenConsume();
@@ -154,12 +152,12 @@ public class BigQueueLoadTest {
 		System.out.println("Load test finished successfully.");
 	}
 	
-	public void doRunProduceThenConsume() throws Exception {
+	private void doRunProduceThenConsume() throws Exception {
 		//prepare
 		CountDownLatch platch = new CountDownLatch(producerNum);
 		CountDownLatch clatch = new CountDownLatch(consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {
@@ -194,11 +192,11 @@ public class BigQueueLoadTest {
 	}
 	
 
-	public void doRunMixed() throws Exception {
+	private void doRunMixed() throws Exception {
 		//prepare
 		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
-		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
-		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
+		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<>();
+		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<>();
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {
