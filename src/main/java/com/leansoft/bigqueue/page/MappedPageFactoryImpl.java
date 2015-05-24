@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
 
 import com.leansoft.bigqueue.cache.ILRUCache;
 import com.leansoft.bigqueue.cache.LRUCacheImpl;
@@ -28,6 +27,7 @@ import static java.nio.channels.FileChannel.MapMode.READ_WRITE;
  * keep memory usage efficient at the same time.  
  * 
  * @author bulldog
+ * @author zerosign
  *
  */
 public class MappedPageFactoryImpl implements IMappedPageFactory {

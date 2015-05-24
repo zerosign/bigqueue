@@ -28,7 +28,7 @@ import com.leansoft.bigqueue.utils.FolderNameValidator;
  * 7. CLIENT MANAGED INDEX - support access by index and the queue index is managed at client side.
  * 
  * @author bulldog
- *
+ * @author zerosign
  */
 public class FanOutQueueImpl implements IFanOutQueue {
 	

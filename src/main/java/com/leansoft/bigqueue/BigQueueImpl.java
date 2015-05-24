@@ -24,6 +24,7 @@ import com.leansoft.bigqueue.page.MappedPageFactoryImpl;
  * 5. BIG(HUGE) - the total size of the queued data is only limited by the available disk space.
  *
  * @author bulldog
+ * @author zerosign
  */
 public class BigQueueImpl implements IBigQueue {
 

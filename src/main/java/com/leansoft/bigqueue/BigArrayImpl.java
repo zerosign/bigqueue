@@ -30,6 +30,7 @@ import com.leansoft.bigqueue.utils.FileUtil;
  * 
  * 
  * @author bulldog
+ * @author zerosign
  *
  */
 public class BigArrayImpl implements IBigArray {

@@ -15,7 +15,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.log4j.Logger;
 
 /**
  * Simple and thread-safe LRU cache implementation, 
@@ -25,15 +24,17 @@ import org.apache.log4j.Logger;
  * and resource closing after mark&sweep is done in async way.  
  * 
  * @author bulldog
+ * @author zerosign
  *
  * @param <K> key
  * @param <V> value
  */
 public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
-	
-	private final static Logger logger = Logger.getLogger(LRUCacheImpl.class);
-	
-	public static final long DEFAULT_TTL = 10 * 1000; // milliseconds
+
+	//private final static Logger logger = LoggerFactor.getLogger(LRUCacheImpl.class);
+
+    public static final long DEFAULT_TTL = 10 * 1000; // milliseconds
+
 	
 	private final Map<K, V> map;
 	private final Map<K, TTLValue> ttlMap;
@@ -154,6 +155,8 @@ public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
 					// close quietly
 				}
 			}
+
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("ResourceCloser closed " + size + (size > 1 ? " resources.":" resource."));
 			}

@@ -6,8 +6,6 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 
-import org.apache.log4j.Logger;
-
 public class MappedPageImpl implements IMappedPage, Closeable {
 	
 	private final static Logger logger = Logger.getLogger(MappedPageImpl.class);
