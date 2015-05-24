@@ -23,7 +23,7 @@ public interface ILRUCache<K, V extends Closeable> {
 	 * @param value the to be cached resource
 	 * @param ttlInMilliSeconds time to live in milliseconds
 	 */
-	public void put(final K key, final V value, final long ttlInMilliSeconds);
+	void put(final K key, final V value, final long ttlInMilliSeconds);
 	
 	/**
 	 * Put a keyed resource with default ttl into the cache
@@ -33,7 +33,7 @@ public interface ILRUCache<K, V extends Closeable> {
 	 * @param key the key of the cached resource
 	 * @param value the to be cached resource
 	 */
-	public void put(final K key, final V value);
+	void put(final K key, final V value);
 	
 	
 	/**
@@ -44,7 +44,7 @@ public interface ILRUCache<K, V extends Closeable> {
 	 * @param key the key of the cached resource
 	 * @return cached resource if exists
 	 */
-	public V get(final K key);
+	V get(final K key);
 	
 	/**
 	 * Release the cached resource with specific key
@@ -53,7 +53,7 @@ public interface ILRUCache<K, V extends Closeable> {
 	 * 
 	 * @param key
 	 */
-	public void release(final K key);
+	void release(final K key);
 	
 	/**
 	 * Remove the resource with specific key from the cache and close it synchronously afterwards.
@@ -62,25 +62,25 @@ public interface ILRUCache<K, V extends Closeable> {
 	 * @return the removed resource if exists
 	 * @throws IOException exception thrown if there is any IO error
 	 */
-	public V remove(final K key) throws IOException;
+	V remove(final K key) throws IOException;
 	
 	/**
 	 * Remove all cached resource from the cache and close them asynchronously afterwards.
 	 * 
 	 * @throws IOException exception thrown if there is any IO error
 	 */
-	public void removeAll() throws IOException;
+	void removeAll() throws IOException;
 	
 	/**
 	 * The size of the cache, equals to current total number of cached resources.
 	 * 
 	 * @return the size of the cache
 	 */
-	public int size();
+	int size();
 	
 	/**
 	 * All values cached
 	 * @return a collection
 	 */
-	public Collection<V> getValues();
+	Collection<V> getValues();
 }

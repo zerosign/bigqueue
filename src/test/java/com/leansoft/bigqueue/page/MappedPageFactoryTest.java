@@ -139,7 +139,7 @@ public class MappedPageFactoryTest {
 			IMappedPage mappedPageI = mappedPageFactory.acquirePage(i);
 			mappedPageI.getLocal(0).put(("hello " + i).getBytes());
 			mappedPageI.setDirty(true);
-			((MappedPageImpl)mappedPageI).flush();
+			mappedPageI.flush();
 			long currentTime = System.currentTimeMillis();
 			long iPageFileLastModifiedTime = mappedPageFactory.getPageFileLastModifiedTime(i);
 			assertTrue(iPageFileLastModifiedTime >= start);

@@ -25,7 +25,7 @@ public interface IMappedPage {
 	 * @param length the length to fetch
 	 * @return byte data
 	 */
-	public byte[] getLocal(int position, int length);
+	byte[] getLocal(int position, int length);
 	
 	/**
 	 * Check if this mapped page has been closed or not
@@ -58,5 +58,5 @@ public interface IMappedPage {
 	/**
 	 * Persist any changes to disk
 	 */
-	public void flush();
+	void flush();
 }

@@ -41,7 +41,7 @@ public class BigArrayPerfTest {
 	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 
-	private static enum Status {
+	private enum Status {
 		ERROR,
 		SUCCESS
 	}

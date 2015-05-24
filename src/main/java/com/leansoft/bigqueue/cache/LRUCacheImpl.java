@@ -1,5 +1,8 @@
 package com.leansoft.bigqueue.cache;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,8 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
 
-	//private final static Logger logger = LoggerFactor.getLogger(LRUCacheImpl.class);
-
+	private final static Logger LOGGER = LoggerFactory.getLogger(LRUCacheImpl.class);
     public static final long DEFAULT_TTL = 10 * 1000; // milliseconds
 
 	
@@ -68,10 +70,12 @@ public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
 			writeLock.unlock();
 		}
 		if (valuesToClose != null && valuesToClose.size() > 0) {
-			if (logger.isDebugEnabled()) { 
-				int size = valuesToClose.size();
-				logger.info("Mark&Sweep found " + size + (size > 1 ? " resources":" resource")  + " to close.");
-			}
+
+            LOGGER.debug(
+                "Mark&Sweep found {} to close.",
+                valuesToClose.size()
+            );
+
 			// close resource asynchronously
 			executorService.execute(new ValueCloser<V>(valuesToClose));
 		}
@@ -156,10 +160,8 @@ public class LRUCacheImpl<K, V extends Closeable> implements ILRUCache<K, V> {
 				}
 			}
 
+            LOGGER.debug("ResourceCloser closed {} ", size);
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("ResourceCloser closed " + size + (size > 1 ? " resources.":" resource."));
-			}
 		}
 	}
 

@@ -18,7 +18,7 @@ public interface IBigQueue extends Closeable {
 	 * 
 	 * @return ture if empty, false otherwise
 	 */
-	public boolean isEmpty();
+	boolean isEmpty();
 	
 	/**
 	 * Adds an item at the back of a queue
@@ -26,7 +26,7 @@ public interface IBigQueue extends Closeable {
 	 * @param data to be enqueued data
 	 * @throws IOException exception throws if there is any IO error during enqueue operation.
 	 */
-	public void enqueue(byte[] data)  throws IOException;
+	void enqueue(byte[] data)  throws IOException;
 	
 	/**
 	 * Retrieves and removes the front of a queue
@@ -34,7 +34,7 @@ public interface IBigQueue extends Closeable {
 	 * @return data at the front of a queue
 	 * @throws IOException exception throws if there is any IO error during dequeue operation.
 	 */
-	public byte[] dequeue() throws IOException;
+	byte[] dequeue() throws IOException;
 
     /**
      * Retrieves a Future which will complete if new Items where enqued.
@@ -44,7 +44,7 @@ public interface IBigQueue extends Closeable {
      *
      * @return a ListenableFuture which completes with the first entry if items are ready to be dequeued.
      */
-    public ListenableFuture<byte[]> dequeueAsync();
+	ListenableFuture<byte[]> dequeueAsync();
 
 	
 	/**
@@ -52,7 +52,7 @@ public interface IBigQueue extends Closeable {
 	 * 
 	 * @throws IOException exception throws if there is any IO error during dequeue operation.
 	 */
-	public void removeAll() throws IOException;
+	void removeAll() throws IOException;
 	
 	/**
 	 * Retrieves the item at the front of a queue
@@ -60,7 +60,7 @@ public interface IBigQueue extends Closeable {
 	 * @return data at the front of a queue
 	 * @throws IOException exception throws if there is any IO error during peek operation.
 	 */
-	public byte[] peek()  throws IOException;
+	byte[] peek()  throws IOException;
 
 
     /**
@@ -69,7 +69,7 @@ public interface IBigQueue extends Closeable {
      *
      * @return a future containing the first item if available. You may register as listener at this future to be informed if a new item arrives.
      */
-    public ListenableFuture<byte[]> peekAsync();
+	ListenableFuture<byte[]> peekAsync();
 
     /**
      * apply an implementation of a ItemIterator interface for each queue item
@@ -77,7 +77,7 @@ public interface IBigQueue extends Closeable {
      * @param iterator
      * @throws IOException
      */
-    public void applyForEach(ItemIterator iterator) throws IOException;
+	void applyForEach(ItemIterator iterator) throws IOException;
 	
 	/**
 	 * Delete all used data files to free disk space.
@@ -88,7 +88,7 @@ public interface IBigQueue extends Closeable {
 	 * 
 	 * @throws IOException exception throws if there is any IO error during gc operation.
 	 */
-	public void gc() throws IOException;
+	void gc() throws IOException;
 	
 	/**
 	 * Force to persist current state of the queue, 
@@ -99,24 +99,24 @@ public interface IBigQueue extends Closeable {
 	 * 
 	 * call this periodically only if you need transactional reliability and you are aware of the cost to performance.
 	 */
-	public void flush();
+	void flush();
 	
 	/**
 	 * Total number of items available in the queue.
 	 * @return total number
 	 */
-	public long size();
+	long size();
 	
 	/**
 	 * Item iterator interface
 	 */
-	public static interface ItemIterator {
+	interface ItemIterator {
         /**
          * Method to be executed for each queue item
          *
          * @param item queue item
          * @throws IOException
          */
-        public void forEach(byte[] item) throws IOException;
+		void forEach(byte[] item) throws IOException;
     }
 }

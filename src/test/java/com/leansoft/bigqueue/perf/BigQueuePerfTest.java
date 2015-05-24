@@ -40,12 +40,12 @@ public class BigQueuePerfTest {
 	private static TestType testType = TestType.BIG_QUEUE_TEST;
 	//////////////////////////////////////////////////////////////////
 	
-	private static enum TestType {
+	private enum TestType {
 		IN_MEMORY_QUEUE_TEST,
 		BIG_QUEUE_TEST
 	}
 
-	private static enum Status {
+	private enum Status {
 		ERROR,
 		SUCCESS
 	}

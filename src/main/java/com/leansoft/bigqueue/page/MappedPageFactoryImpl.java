@@ -16,6 +16,8 @@ import java.util.TreeSet;
 import com.leansoft.bigqueue.cache.ILRUCache;
 import com.leansoft.bigqueue.cache.LRUCacheImpl;
 import com.leansoft.bigqueue.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.nio.channels.FileChannel.MapMode.READ_WRITE;
 
@@ -32,7 +34,7 @@ import static java.nio.channels.FileChannel.MapMode.READ_WRITE;
  */
 public class MappedPageFactoryImpl implements IMappedPageFactory {
 	
-	private final static Logger logger = Logger.getLogger(MappedPageFactoryImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(MappedPageFactoryImpl.class);
 	
 	private int pageSize;
 	private String pageDir;
